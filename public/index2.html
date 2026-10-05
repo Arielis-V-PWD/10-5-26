@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My App</title>
+    <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+    <h1>Very Plain and boring page :|</h1>
+    <p>I enjoy reading DC comics. <span>Specifically, the ones that feature Bane.</span></p>
+
+    <div id="status" aria-live="polite"></div>
+
+    <div id="login-section">
+        <h2>Login</h2>
+        <form id="login-form" action="/login" method="post">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+            <label>
+                <input type="checkbox" name="rememberMe" /> Remember me
+            </label>
+            <button type="submit">Login</button>
+        </form>
+        <p id="login-message" role="status"></p>
+    </div>
+
+    <button id="logout-button" type="button" hidden>Logout</button>
+
+    <script>
+        const loginForm = document.querySelector('#login-form');
+        const loginMessage = document.querySelector('#login-message');
+        const status = document.querySelector('#status');
+        const loginSection = document.querySelector('#login-section');
+        const logoutButton = document.querySelector('#logout-button');
+
+        async function checkAuthState() {
+            try {
+                const response = await fetch('/api/whoami', { credentials: 'same-origin' });
+                const data = await response.json();
+                if (data.loggedIn) {
+                    status.innerHTML = '<p>You are logged in.</p>';
+                    loginSection.hidden = true;
+                    logoutButton.hidden = false;
+                } else {
+                    status.innerHTML = '<p>You are not logged in.</p>';
+                    loginSection.hidden = false;
+                    logoutButton.hidden = true;
+                }
+            } catch (error) {
+                status.innerHTML = '<h1>Welcome!</h1>';
+                loginSection.hidden = false;
+                logoutButton.hidden = true;
+            }
+        }
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const password = document.querySelector('#password').value;
+            const rememberMe = new FormData(loginForm).get('rememberMe') === 'on';
+            const response = await fetch('/login', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password, rememberMe })
+            });
+            const data = await response.json().catch(() => ({ success: false }));
+            if (data.success) {
+                loginMessage.textContent = 'Login successful!';
+                loginForm.reset();
+                await checkAuthState();
+                window.location.href = '/dashboard';
+            } else {
+                loginMessage.textContent = data.error || 'Login failed. Please try again.';
+            }
+        });
+
+        logoutButton.addEventListener('click', async () => {
+            const response = await fetch('/logout', {
+                method: 'POST',
+                credentials: 'same-origin'
+            });
+            const data = await response.json().catch(() => ({ success: false }));
+            if (data.success) {
+                await checkAuthState();
+                window.location.href = '/';
+            }
+        });
+
+        checkAuthState();
+    </script>
+
+    <div id="root"></div>
+    <script src="/server.js"></script>
+</body>
+
+</html>
