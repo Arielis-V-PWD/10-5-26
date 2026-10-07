@@ -131,6 +131,7 @@ app.get('/api/hello', (req, res) => {
 
 // Exposes the visitor count as JSON, e.g. for a frontend script to display
 app.get('/api/stats', (req, res) => {
+    res.set('Cache-Control', 'no-store');
     res.json({ visitorCount });
 });
 
@@ -220,6 +221,15 @@ app.get('/about', (req, res) => {
     visitorCount++;
     console.log(`Visit #${visitorCount}: someone viewed the about page`);
     res.sendFile(path.join(PUBLIC_DIR, 'about.html'));
+});
+
+app.get('/api/headers-demo', (req, res) => {
+    res.set('X-Student-Name', 'Your Name Here');
+    res.json({
+        browser: req.get('User-Agent'),
+        languages: req.get('Accept-Language'),
+        allRequestHeaders: req.headers
+    });
 });
 
 // app.get('/your-route-here', (req, res) => {
