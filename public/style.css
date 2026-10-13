@@ -12,6 +12,12 @@
     --shadow: 0 18px 42px rgba(158, 95, 41, 0.14);
 }
 
+#picture {
+    img {
+        max-width: 100%;
+    }
+}
+
 * {
     box-sizing: border-box;
 }
