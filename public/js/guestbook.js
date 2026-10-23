@@ -1,3 +1,5 @@
+let currentUser = null;
+
 async function deleteEntry(id) {
     if (!confirm('Delete this message?')) return;
     const listError = document.querySelector('#list-error');
@@ -28,7 +30,7 @@ async function saveEdit(entry, newMsg) {
         const response = await fetch(`/api/guestbook/${encodeURIComponent(entry.id)}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: entry.name, msg: newMsg })
+            body: JSON.stringify({ msg: newMsg })
         });
 
         if (!response.ok) {
@@ -72,6 +74,10 @@ async function loadMessages() {
     list.innerHTML = '';
 
     try {
+        if (!currentUser) {
+            currentUser = await (await fetch('/api/whoami')).json();
+        }
+
         const response = await fetch('/api/guestbook');
         const data = await response.json().catch(() => ({}));
 
@@ -102,17 +108,21 @@ async function loadMessages() {
 
             li.append(msg);
 
-            const editButton = document.createElement('button');
-            editButton.type = 'button';
-            editButton.textContent = 'Edit';
-            editButton.addEventListener('click', () => startEdit(li, entry));
+            const canEdit = entry.authorId === currentUser.userId || currentUser.role === 'admin';
+            if (canEdit) {
+                const editButton = document.createElement('button');
+                editButton.type = 'button';
+                editButton.textContent = 'Edit';
+                editButton.addEventListener('click', () => startEdit(li, entry));
 
-            const deleteButton = document.createElement('button');
-            deleteButton.type = 'button';
-            deleteButton.textContent = 'Delete';
-            deleteButton.addEventListener('click', () => deleteEntry(entry.id));
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', () => deleteEntry(entry.id));
 
-            li.append(editButton, deleteButton);
+                li.append(editButton, deleteButton);
+            }
+
             list.append(li);
         });
     } catch (err) {
@@ -129,10 +139,7 @@ document.querySelector('#guestbook-form').addEventListener('submit', async (e) =
         const response = await fetch('/api/guestbook', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: document.querySelector('#name').value,
-                msg: document.querySelector('#msg').value
-            })
+            body: JSON.stringify({ msg: document.querySelector('#msg').value })
         });
 
         if (!response.ok) {

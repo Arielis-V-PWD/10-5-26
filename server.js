@@ -171,6 +171,10 @@ function requireAuth(req, res, next) {
     next();
 }
 
+function canModify(req, entry) {
+    return entry.authorId === req.session.userId || req.session.role === 'admin';
+}
+
 function requireLoginPage(req, res, next) {
     if (!req.session?.userId) {
         return res.redirect('/');
@@ -332,31 +336,36 @@ app.get('/api/guestbook/:id', requireAuth, async (req, res) => {
 });
 
 app.put('/api/guestbook/:id', requireAuth, async (req, res) => {
-    const { name, msg } = req.body;
-    const error = validateEntry(name, msg);
+    const { msg } = req.body;
+    const entry = await db.getEntryById(req.params.id);
+    if (!entry) {
+        return res.status(404).json({ error: 'Entry not found.' });
+    }
+    if (!canModify(req, entry)) {
+        return res.status(403).json({ error: 'You can only edit your own messages.' });
+    }
+
+    const error = validateEntry(entry.name, msg);
     if (error) {
         return res.status(400).json({ error });
     }
 
-    if (filter.isProfane(msg)) {
-        return res.status(400).json({ error: 'Please keep your message friendly.' });
-    }
+    // Keep your bad-words check here too, if you have one
 
-    const updated = await db.updateEntry(req.params.id, {
-        name: name.trim(),
-        msg: msg.trim()
-    });
-    if (!updated) {
-        return res.status(404).json({ error: 'Entry not found.' });
-    }
+    const updated = await db.updateEntry(entry.id, { name: entry.name, msg: msg.trim() });
     res.json(updated);
 });
 
 app.delete('/api/guestbook/:id', requireAuth, async (req, res) => {
-    const deleted = await db.deleteEntry(req.params.id);
-    if (!deleted) {
+    const entry = await db.getEntryById(req.params.id);
+    if (!entry) {
         return res.status(404).json({ error: 'Entry not found.' });
     }
+    if (!canModify(req, entry)) {
+        return res.status(403).json({ error: 'You can only delete your own messages.' });
+    }
+
+    await db.deleteEntry(entry.id);
     res.status(204).end();
 });
 
@@ -448,7 +457,9 @@ app.get('/api/space', async (req, res) => {
 
 
 app.post('/api/guestbook', requireAuth, async (req, res) => {
-    const { name, msg } = req.body;
+    const { msg } = req.body;
+    const name = req.session.username;
+
     const error = validateEntry(name, msg);
     if (error) {
         return res.status(400).json({ error });
@@ -457,7 +468,11 @@ app.post('/api/guestbook', requireAuth, async (req, res) => {
     if (filter.isProfane(msg)) {
         return res.status(400).json({ error: 'Please keep your message friendly.' });
     }
-    const entry = await db.addEntry({ name: name.trim(), msg: msg.trim() });
+    const entry = await db.addEntry({
+        name,
+        msg: msg.trim(),
+        authorId: req.session.userId
+    });
     res.status(201).json(entry);
 });
 
