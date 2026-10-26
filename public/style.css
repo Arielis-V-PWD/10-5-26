@@ -12,6 +12,14 @@
     --shadow: 0 18px 42px rgba(158, 95, 41, 0.14);
 }
 
+.hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 #picture {
     img {
         max-width: 100%;
