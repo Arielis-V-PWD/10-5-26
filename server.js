@@ -485,7 +485,7 @@ app.get('/api/space', async (req, res) => {
 });
 
 
-app.post('/api/guestbook', requireAuth, botCheck, async (req, res) => {
+app.post('/api/guestbook', requireAuth, postlimiter, botCheck, async (req, res) => {
     const { msg } = req.body;
     const name = req.session.username;
 
@@ -539,6 +539,13 @@ app.use((req, res, next) => {
         return requireAuth(req, res, next);
     }
     next();
+});
+
+const postlimiter = rateLimit({
+    windowMs: 60 * 1000,
+    limit: 3,
+    keyGenerator: (req) => req.session.userId,
+    message: { error: 'you are posting too fast. please wait a minute' }
 });
 
 // ==========================================
