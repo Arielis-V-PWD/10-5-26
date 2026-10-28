@@ -139,6 +139,13 @@ const authLimiter = rateLimit({
     message: { error: 'Too many login attempts. Please wait 15 minutes and try again.' }
 });
 
+const postlimiter = rateLimit({
+    windowMs: 60 * 1000,
+    limit: 3,
+    keyGenerator: (req) => req.session.userId,
+    message: { error: 'you are posting too fast. please wait a minute' }
+});
+
 app.use(limiter);
 
 // const spaceLimiter = rateLimit({
@@ -539,13 +546,6 @@ app.use((req, res, next) => {
         return requireAuth(req, res, next);
     }
     next();
-});
-
-const postlimiter = rateLimit({
-    windowMs: 60 * 1000,
-    limit: 3,
-    keyGenerator: (req) => req.session.userId,
-    message: { error: 'you are posting too fast. please wait a minute' }
 });
 
 // ==========================================
