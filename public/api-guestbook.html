@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guestbook API</title>
+    <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body class="page page-api">
+    <main class="shell">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-mark">✦</span>
+                <h1>Sunny Notes</h1>
+            </div>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/guestbook">Guestbook</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="about-card">
+            <p class="eyebrow">API page</p>
+            <h2>Guestbook API</h2>
+            <p>Read, create, update, and delete guestbook entries for logged-in users.</p>
+
+            <div class="info-grid">
+                <article class="info-item">
+                    <h3>Read</h3>
+                    <p>GET /api/guestbook</p>
+                </article>
+                <article class="info-item">
+                    <h3>Create</h3>
+                    <p>POST /api/guestbook</p>
+                </article>
+                <article class="info-item">
+                    <h3>Update / Delete</h3>
+                    <p>PUT /api/guestbook/:id and DELETE /api/guestbook/:id</p>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

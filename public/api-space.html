@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space API</title>
+    <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body class="page page-api">
+    <main class="shell">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-mark">☄</span>
+                <h1>Sunny Notes</h1>
+            </div>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/guestbook">Guestbook</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="about-card">
+            <p class="eyebrow">API page</p>
+            <h2>Space Picture API</h2>
+            <p>Fetches NASA’s Astronomy Picture of the Day data for a selected date.</p>
+
+            <div class="info-grid">
+                <article class="info-item">
+                    <h3>Endpoint</h3>
+                    <p><strong>GET /api/space</strong></p>
+                </article>
+                <article class="info-item">
+                    <h3>Optional query</h3>
+                    <p>?date=2026-11-02</p>
+                </article>
+                <article class="info-item">
+                    <h3>Example response</h3>
+                    <p>{ "title": "Example title", "date": "2026-11-02", "imageUrl": "...", "description": "..." }</p>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

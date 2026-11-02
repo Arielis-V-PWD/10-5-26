@@ -2,9 +2,26 @@ const form = document.querySelector('#space-form');
 const dateInput = document.querySelector('#date');
 const statusBox = document.querySelector('#status');
 const result = document.querySelector('#result');
+const apiMode = document.querySelector('#api-mode');
 
-// Don't let the date picker choose future dates
-dateInput.max = new Date().toISOString().slice(0, 10);
+const today = new Date().toISOString().slice(0, 10);
+dateInput.max = today;
+dateInput.value = today;
+
+function chooseRandomDate() {
+    const start = new Date('1995-06-16T00:00:00Z').getTime();
+    const end = new Date(today).getTime();
+    const randomMs = Math.random() * (end - start) + start;
+    return new Date(randomMs).toISOString().slice(0, 10);
+}
+
+apiMode.addEventListener('change', () => {
+    if (apiMode.value === 'random') {
+        dateInput.value = chooseRandomDate();
+    } else if (apiMode.value === 'today') {
+        dateInput.value = today;
+    }
+});
 
 async function loadPicture(date) {
     statusBox.textContent = 'Loading...';
@@ -44,7 +61,10 @@ function showPicture(data) {
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
+    if (apiMode.value === 'random') {
+        dateInput.value = chooseRandomDate();
+    }
     loadPicture(dateInput.value);
 });
 
-loadPicture(); // show the latest picture when the page opens
+loadPicture();

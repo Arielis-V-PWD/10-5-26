@@ -1,19 +1,68 @@
-<h1>Space Picture of the Day</h1>
-<style src="style.css"></style>
-<form id="space-form">
-    <label for="date">Pick a date</label>
-    <input type="date" id="date" min="1995-06-16" />
-    <button type="submit">Show picture</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
 
-<p id="status" role="status"></p>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space Picture</title>
+    <link rel="stylesheet" href="/style.css" />
+</head>
 
-<article id="result" hidden>
-    <h2 id="title"></h2>
-    <p id="date-shown"></p>
-    <img id="picture" />
-    <p id="description"></p>
-    <a id="nasa-link" target="_blank" rel="noopener">Read the full story on NASA's website</a>
-</article>
+<body class="page page-space">
+    <main class="shell">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-mark">✦</span>
+                <h1>Sunny Notes</h1>
+            </div>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/guestbook">Guestbook</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                </ul>
+            </nav>
+        </header>
 
-<script src="/js/space.js"></script>
+        <section class="space-card">
+            <div class="section-header">
+                <p class="eyebrow">Space API</p>
+                <h2>Picture of the Day</h2>
+            </div>
+
+            <div class="space-field-row">
+                <div>
+                    <label for="date">Pick a date</label>
+                    <input type="date" id="date" min="1995-06-16" />
+                </div>
+                <div>
+                    <label for="api-mode">API quick options</label>
+                    <select id="api-mode">
+                        <option value="latest">Latest image</option>
+                        <option value="today">Today</option>
+                        <option value="random">Random date</option>
+                    </select>
+                </div>
+            </div>
+
+            <form id="space-form" class="space-form">
+                <button type="submit">Show picture</button>
+            </form>
+
+            <p id="status" role="status"></p>
+
+            <article id="result" hidden>
+                <h3 id="title"></h3>
+                <p id="date-shown"></p>
+                <img id="picture" />
+                <p id="description"></p>
+                <a id="nasa-link" target="_blank" rel="noopener">Read the full story on NASA's website</a>
+            </article>
+        </section>
+    </main>
+
+    <script src="/js/space.js"></script>
+</body>
+
+</html>

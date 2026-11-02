@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stats API</title>
+    <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body class="page page-api">
+    <main class="shell">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-mark">★</span>
+                <h1>Sunny Notes</h1>
+            </div>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/guestbook">Guestbook</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="about-card">
+            <p class="eyebrow">API page</p>
+            <h2>Visitor Stats API</h2>
+            <p>Returns the current visit count for the public-facing pages.</p>
+
+            <div class="info-grid">
+                <article class="info-item">
+                    <h3>Endpoint</h3>
+                    <p><strong>GET /api/stats</strong></p>
+                </article>
+                <article class="info-item">
+                    <h3>Response</h3>
+                    <p>{ "visitorCount": 42 }</p>
+                </article>
+                <article class="info-item">
+                    <h3>Notes</h3>
+                    <p>Uses a no-store cache header so the count stays fresh.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
