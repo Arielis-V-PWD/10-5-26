@@ -28,7 +28,7 @@ const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const isProduction = process.env.NODE_ENV === 'production';
 
-// ===== 1. Security and parsing =====
+
 app.set('trust proxy', 1);
 app.use(helmet({
     contentSecurityPolicy: {
@@ -42,7 +42,7 @@ app.use(express.json());
 app.use(requestLogger);
 app.use(limiter);
 
-// ===== 2. Sessions =====
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -55,18 +55,18 @@ app.use(session({
     }
 }));
 
-// ===== 3. Routes =====
+
 app.use(pagesRouter);
 app.use(authRouter);
 app.use('/api/guestbook', guestbookRouter);
 app.use('/api/space', spaceRouter);
 
-// ===== 4. Static files, then errors =====
+
 app.use(express.static(PUBLIC_DIR, { extensions: ['html'] }));
 app.use(notFound);
 app.use(errorHandler);
 
-// ===== 5. Start =====
+
 ensureAdmin().then(() => {
     app.listen(PORT, () => console.log(`Server live on http://localhost:${PORT}`));
 });
